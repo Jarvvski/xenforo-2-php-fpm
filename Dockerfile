@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y wget libapache2-mod-fcgid libfcgi-bin \
     mariadb-client libmagickwand-dev --no-install-recommends \
     && pecl install imagick \
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install pdo_mysql mysqli gd \
+    && docker-php-ext-install pdo_mysql mysqli gd zip \
     && docker-php-ext-enable imagick
 
 # Install health check tool for use in container health check
