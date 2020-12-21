@@ -2,6 +2,8 @@ FROM php:7.4-fpm
 
 LABEL maintainer="Adam Jarvis <adam@jarvis.gg>"
 
+RUN set -ex
+
 RUN apt-get update; \
     apt-get install -y --no-install-recommends \
     imagemagick \
@@ -58,10 +60,14 @@ RUN { \
     echo 'opcache.fast_shutdown=1'; \
     echo 'opcache.enable_cli=1'; \
     } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+
+# Use the default production configuration
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
 # Install health check tool for use in container health check
 # https://github.com/renatomefi/php-fpm-healthcheck
 RUN wget -O /usr/local/bin/php-fpm-healthcheck \
     https://raw.githubusercontent.com/renatomefi/php-fpm-healthcheck/master/php-fpm-healthcheck \
     && chmod +x /usr/local/bin/php-fpm-healthcheck
 
-RUN set -xe && echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
+RUN echo "pm.status_path = /status" >> /usr/local/etc/php-fpm.d/zz-docker.conf
