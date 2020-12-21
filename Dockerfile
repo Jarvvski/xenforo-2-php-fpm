@@ -32,6 +32,10 @@ RUN pecl install imagick; \
 RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
     echo "extension=memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini;
 
+RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
+    docker-php-ext-configure zip; \
+    docker-php-ext-enable imagick;
+
 RUN docker-php-ext-install imap; \
     docker-php-ext-install pdo_mysql; \
     docker-php-ext-install mysqli; \
@@ -42,10 +46,6 @@ RUN docker-php-ext-install imap; \
     docker-php-ext-install gd; \
     docker-php-ext-install zip; \
     docker-php-ext-install opcache
-
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
-    docker-php-ext-configure zip; \
-    docker-php-ext-enable imagick;
 
 RUN apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /var/lib/apt/lists/*;
