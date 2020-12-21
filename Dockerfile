@@ -2,25 +2,25 @@ FROM php:7.4-fpm-alpine
 
 LABEL maintainer="Adam Jarvis <adam@jarvis.gg>"
 
-RUN set -ex
-
-RUN apk update; \
-    apk upgrade; \
-    apk add --no-cache \
-    fcgi \
-    mariadb-client \
-    libpng-dev \
-    libmcrypt-dev \
-    libjpeg \
-    libjpeg-turbo-dev \
-    freetype-dev \
-    libzip-dev \
-    libxml2-dev \
-    libmemcached-dev \
-    libressl-dev \
-    zip \
-    unzip \
-    wget
+RUN set -ex; \
+         apk add --no-cache \
+                fcgi \
+                mariadb-client \
+                imap-dev \
+                libpng-dev \
+                libmcrypt-dev \
+                freetype-dev \
+                libjpeg-turbo-dev \
+                libjpeg-turbo \
+                libpng-dev \
+                jpeg-dev \
+                libzip-dev \
+                libxml2-dev \
+                libmemcached-dev \
+                libressl-dev \
+                zip \
+                unzip \
+                wget
 
 # Install PHP pecl deps for installing php modules
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool; \
@@ -34,20 +34,23 @@ RUN pecl install imagick; \
 RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ssl; \
     echo "extension=memcached.so" >> /usr/local/etc/php/conf.d/memcached.ini;
 
-RUN docker-php-ext-install imap; \
-    docker-php-ext-install pdo_mysql; \
-    docker-php-ext-install mysqli; \
-    docker-php-ext-install opcache; \
-    docker-php-ext-install soap; \
-    docker-php-ext-install zip; \
-    docker-php-ext-install exif; \
-    docker-php-ext-install gd; \
-    docker-php-ext-install zip; \
-    docker-php-ext-install opcache
+RUN docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg
 
-RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
-    docker-php-ext-configure zip; \
+RUN docker-php-ext-configure zip; \
     docker-php-ext-enable imagick;
+
+RUN set -ex; docker-php-ext-install  imap \
+                            pdo_mysql \
+                            mysqli \
+                            opcache \
+                            soap \
+                            zip \
+                            exif \
+                            gd \
+                            zip \
+                            opcache
 
 # clear up php pecl deps
 RUN apk del .phpize-deps
