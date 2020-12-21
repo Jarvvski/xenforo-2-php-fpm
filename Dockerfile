@@ -2,9 +2,9 @@ FROM php:7.4-fpm-alpine
 
 RUN apk update && apk upgrade \
     && apk add --no-cache fcgi mariadb-client libpng-dev libmcrypt-dev \
-        libjpeg libjpeg-turbo-dev freetype-dev \
+    libjpeg libjpeg-turbo-dev freetype-dev libzip-dev\
     && docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/ \
-    && docker-php-ext-install pdo_mysql mysqli gd
+    && docker-php-ext-install pdo_mysql mysqli gd zip
 
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS imagemagick-dev libtool \
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
