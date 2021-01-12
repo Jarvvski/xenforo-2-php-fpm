@@ -39,7 +39,7 @@ RUN docker-php-ext-configure gd \
     --with-jpeg
 
 RUN docker-php-ext-configure zip; \
-    docker-php-ext-enable imagick;
+    docker-php-ext-enable imagick redis;
 
 RUN set -ex; docker-php-ext-install  imap \
                             pdo_mysql \
