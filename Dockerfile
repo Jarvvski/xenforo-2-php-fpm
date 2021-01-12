@@ -34,7 +34,8 @@ RUN PHP_OPENSSL=yes docker-php-ext-configure imap --with-kerberos --with-imap-ss
 
 RUN docker-php-ext-configure gd --with-freetype=/usr/include/ --with-jpeg=/usr/include/; \
     docker-php-ext-configure zip; \
-    docker-php-ext-enable imagick;
+    docker-php-ext-enable imagick; \
+    docker-php-ext-enable redis;
 
 RUN docker-php-ext-install imap; \
     docker-php-ext-install pdo_mysql; \
