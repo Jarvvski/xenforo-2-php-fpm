@@ -18,6 +18,7 @@ RUN set -ex; \
                 libxml2-dev \
                 libmemcached-dev \
                 libressl-dev \
+                libgomp \
                 zip \
                 unzip \
                 wget
