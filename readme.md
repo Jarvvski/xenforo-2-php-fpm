@@ -1,6 +1,6 @@
 # Xenforo 2 PHP FPM Container Image
 
-A PHP 7.4, FPM based image to mount a xenforo installation inside of, and then use a reverse proxy to pass through requests
+A PHP 8, FPM based image to mount a xenforo installation inside of, and then use a reverse proxy to pass through requests
 
 Includes [php-fpm-healthcheck](https://github.com/renatomefi/php-fpm-healthcheck) to make it easy to configure a container health check as shown in the usage example below.
 
@@ -23,8 +23,10 @@ version: '3.7'
 
 services:
   xenforo:
-    image: jarvvski/xenforo-2-php-fpm
+    image: jarvvski/xenforo-2-php-fpm:alpine
     container_name: xenforo
+    # use a specific uuid/gid mask if the files need it
+    # user: 1001:998 
     healthcheck:
       test: ["CMD", "php-fpm-healthcheck"]
       interval: 15s
@@ -34,10 +36,12 @@ services:
     restart: always
     working_dir: /var/www/html
     volumes:
-      - xenforo-data:/var/www/html
+      - xenforo-www:/var/www/html
+      - xenforo-data:/var/www/html/data
+      - xenforo-internal_data:/var/www/html/internal_data          
 
   nginx:
-    image: nginx:1.19-alpine
+    image: nginx:1.21-alpine
     container_name: xenforo-nginx
     networks:
       - edge
@@ -60,5 +64,7 @@ services:
 
 volumes:
   xenforo-database:
+  xenforo-www:
   xenforo-data:
+  xenforo-internal_data:      
 ```
